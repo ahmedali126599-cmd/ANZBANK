@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lyam Leo Transfer</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#060b18;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.app{
+width:100%;
+max-width:450px;
+background:#0f1729;
+border-radius:30px;
+padding:25px;
+border:1px solid #1d2942;
+box-shadow:0 0 40px rgba(0,0,0,0.5);
+overflow:hidden;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo h1{
+font-size:32px;
+margin-bottom:8px;
+}
+
+.balance{
+background:linear-gradient(135deg,#0b5cff,#003ecb);
+padding:25px;
+border-radius:25px;
+margin-bottom:25px;
+}
+
+.balance small{
+opacity:0.9;
+}
+
+.balance h2{
+font-size:36px;
+margin-top:10px;
+}
+
+.screen{
+display:none;
+animation:fade 0.4s ease;
+}
+
+.active{
+display:block;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateX(20px)}
+to{opacity:1;transform:translateX(0)}
+}
+
+.card{
+background:#131d33;
+padding:18px;
+border-radius:18px;
+margin-bottom:15px;
+cursor:pointer;
+transition:0.3s;
+border:1px solid #22314d;
+}
+
+.card:hover{
+background:#0b5cff;
+}
+
+.card h3{
+margin-bottom:6px;
+}
+
+.list-item{
+background:#18243b;
+padding:15px;
+border-radius:15px;
+margin-bottom:12px;
+cursor:pointer;
+transition:0.3s;
+border:1px solid #243552;
+}
+
+.list-item:hover{
+background:#0b5cff;
+}
+
+input,select{
+width:100%;
+padding:15px;
+border:none;
+outline:none;
+background:#18243b;
+color:white;
+border-radius:15px;
+margin-bottom:15px;
+font-size:15px;
+}
+
+button{
+width:100%;
+padding:16px;
+border:none;
+border-radius:16px;
+background:#0b5cff;
+color:white;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#0049f5;
+}
+
+.loading{
+text-align:center;
+padding:30px;
+}
+
+.loader{
+width:70px;
+height:70px;
+border:6px solid #23385f;
+border-top:6px solid #0b5cff;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin:auto auto 20px;
+}
+
+@keyframes spin{
+100%{transform:rotate(360deg)}
+}
+
+.success{
+text-align:center;
+}
+
+.success h2{
+font-size:34px;
+color:#44ff95;
+margin-bottom:12px;
+}
+
+.success-box{
+background:#13253d;
+padding:18px;
+border-radius:18px;
+margin-top:20px;
+text-align:left;
+line-height:1.9;
+}
+
+.tag{
+background:#0b5cff;
+padding:8px 14px;
+border-radius:50px;
+font-size:13px;
+display:inline-block;
+margin-bottom:20px;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<div class="logo">
+<h1>Lyam Leo</h1>
+<p>ANZ Bank Transfer</p>
+</div>
+
+<div class="balance">
+<small>Available Balance</small>
+<h2>87,000 USD</h2>
+</div>
+
+<div id="screen1" class="screen active">
+<div class="tag">Step 1</div>
+
+<div class="card" onclick="openTransfer('Bank Transfer')">
+<h3>Bank Transfer</h3>
+<p>Send money to international bank accounts</p>
+</div>
+
+<div class="card" onclick="openTransfer('Other Wallet')">
+<h3>Other Wallet</h3>
+<p>Transfer money to digital wallet services</p>
+</div>
+</div>
+
+<div id="screen2" class="screen">
+<div class="tag">Step 2</div>
+<div id="selectionList"></div>
+</div>
+
+<div id="screen3" class="screen">
+<div class="tag">Step 3</div>
+
+<input type="text" id="senderName" placeholder="Sender Full Name">
+<input type="text" id="senderAccount" placeholder="Sender Account Number">
+<input type="text" id="receiverName" placeholder="Receiver Full Name">
+<input type="text" id="receiverAccount" placeholder="Receiver Account Number">
+<input type="text" id="country" placeholder="Receiver Country">
+<input type="number" id="amount" placeholder="Transfer Amount">
+
+<select id="currency">
+<option>USD</option>
+<option>EURO</option>
+<option>AUD</option>
+<option>GBP</option>
+<option>PKR</option>
+<option>PHP</option>
+</select>
+
+<button onclick="processTransfer()">Confirm Transfer</button>
+</div>
+
+<div id="screen4" class="screen">
+<div class="loading">
+<div class="loader"></div>
+<h2>Searching Transaction...</h2>
+<p>Please wait while your transfer is processing</p>
+</div>
+</div>
+
+<div id="screen5" class="screen">
+<div class="success">
+<h2>Successful Transfer</h2>
+<p>Your transaction has been completed successfully.</p>
+
+<div class="success-box" id="successDetails"></div>
+</div>
+</div>
+
+</div>
+
+<script>
+const banks = [
+'JPMorgan Chase (USA)',
+'HSBC (UK / Hong Kong)',
+'Industrial and Commercial Bank of China (ICBC)',
+'BNP Paribas (France)',
+'ANZ Bank'
+];
+
+const wallets = [
+'GCASH',
+'PayPal',
+'Alipay',
+'JazzCash',
+'EasyPaisa',
+'Maya',
+'Western Union'
+];
+
+let selectedMethod = '';
+let selectedService = '';
+
+function showScreen(id){
+document.querySelectorAll('.screen').forEach(screen=>{
+screen.classList.remove('active');
+});
+
+document.getElementById(id).classList.add('active');
+}
+
+function openTransfer(type){
+selectedMethod = type;
+const list = document.getElementById('selectionList');
+list.innerHTML = '';
+
+const data = type === 'Bank Transfer' ? banks : wallets;
+
+for(let item of data){
+list.innerHTML += `
+<div class="list-item" onclick="selectService('${item}')">
+${item}
+</div>
+`;
+}
+
+showScreen('screen2');
+}
+
+function selectService(name){
+selectedService = name;
+showScreen('screen3');
+}
+
+function processTransfer(){
+const sender = document.getElementById('senderName').value;
+const senderAccount = document.getElementById('senderAccount').value;
+const receiver = document.getElementById('receiverName').value;
+const receiverAccount = document.getElementById('receiverAccount').value;
+const country = document.getElementById('country').value;
+const amount = document.getElementById('amount').value;
+const currency = document.getElementById('currency').value;
+
+if(sender === '' || receiver === '' || amount === ''){
+alert('Please fill all details');
+return;
+}
+
+showScreen('screen4');
+
+setTimeout(()=>{
+showScreen('screen5');
+
+document.getElementById('successDetails').innerHTML = `
+<b>Transfer Type:</b> ${selectedMethod}<br>
+<b>Service:</b> ${selectedService}<br>
+<b>Sender:</b> ${sender}<br>
+<b>Sender Account:</b> ${senderAccount}<br>
+<b>Receiver:</b> ${receiver}<br>
+<b>Receiver Account:</b> ${receiverAccount}<br>
+<b>Country:</b> ${country}<br>
+<b>Amount:</b> ${amount} ${currency}<br>
+<b>Status:</b> Successful Transfer
+`;
+
+},3000);
+}
+</script>
+
+</body>
+  </html>
