@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lyam Leo - Demo Transfer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #050816;
+      color: white;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .title h1 {
+      font-size: 40px;
+    }
+
+    .title p {
+      color: #b5b5b5;
+      margin-top: 8px;
+    }
+
+    .balance {
+      background: #0b5cff;
+      padding: 20px 30px;
+      border-radius: 20px;
+    }
+
+    .balance h2 {
+      font-size: 36px;
+      margin-top: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background: #101624;
+      border: 1px solid #202a3d;
+      border-radius: 25px;
+      padding: 25px;
+    }
+
+    h3 {
+      margin-bottom: 15px;
+    }
+
+    .option {
+      background: #1b2435;
+      padding: 18px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .option:hover {
+      background: #0b5cff;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .list-item {
+      background: #161f31;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      border: 1px solid #2f3b57;
+      background: #111827;
+      color: white;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 15px;
+      background: #0b5cff;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #0047d4;
+    }
+
+    .success {
+      margin-top: 30px;
+      background: #052d17;
+      border: 1px solid #0e8a4b;
+      border-radius: 25px;
+      padding: 30px;
+      text-align: center;
+      display: none;
+    }
+
+    .success h2 {
+      color: #3cff8d;
+      font-size: 35px;
+      margin-bottom: 10px;
+    }
+
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+    }
+
+    @media(max-width:700px) {
+      .title h1 {
+        font-size: 28px;
+      }
+
+      .balance h2 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <div class="title">
+        <h1>Lyam Leo Transfer</h1>
+        <p>Professional Demo Banking UI</p>
+      </div>
+
+      <div class="balance">
+        <small>ANZ Bank Balance</small>
+        <h2>87,000 USD</h2>
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <div class="card">
+        <h3>Select Transfer Type</h3>
+
+        <div class="option" onclick="showBank()">
+          <h3>Bank Transfer</h3>
+          <p>Transfer to international banks</p>
+        </div>
+
+        <div class="option" onclick="showWallet()">
+          <h3>Other Wallet</h3>
+          <p>Send money to digital wallets</p>
+        </div>
+
+        <div id="bankSection" class="hidden">
+          <h3>Supported Banks</h3>
+
+          <div class="list-item">JPMorgan Chase (USA)</div>
+          <div class="list-item">HSBC (UK / Hong Kong)</div>
+          <div class="list-item">Industrial and Commercial Bank of China (ICBC)</div>
+          <div class="list-item">BNP Paribas (France)</div>
+          <div class="list-item">ANZ Bank</div>
+        </div>
+
+        <div id="walletSection" class="hidden">
+          <h3>Wallet Services</h3>
+
+          <div class="list-item">GCash</div>
+          <div class="list-item">PayPal</div>
+          <div class="list-item">Alipay</div>
+          <div class="list-item">JazzCash</div>
+          <div class="list-item">EasyPaisa</div>
+          <div class="list-item">Maya</div>
+          <div class="list-item">Western Union</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Transfer Details</h3>
+
+        <input type="text" id="senderName" placeholder="Sender Name" />
+
+        <input type="text" id="senderAccount" placeholder="Sender Account Number" />
+
+        <input type="text" id="receiverName" placeholder="Receiver Name" />
+
+        <input type="text" id="receiverAccount" placeholder="Receiver Account Number" />
+
+        <select id="country">
+          <option>Select Country</option>
+          <option>USA</option>
+          <option>Australia</option>
+          <option>UK</option>
+          <option>Pakistan</option>
+          <option>Philippines</option>
+        </select>
+
+        <input type="number" id="amount" placeholder="Amount USD" />
+
+        <button onclick="transferMoney()">
+          Confirm Transfer
+        </button>
+      </div>
+
+    </div>
+
+    <div class="success" id="successBox">
+      <h2>Transfer Successful</h2>
+      <p>Your demo transfer has been processed successfully.</p>
+      <br>
+      <p id="details"></p>
+    </div>
+
+    <div class="footer">
+      Demo educational UI template only — not connected to real banking systems.
+    </div>
+
+  </div>
+
+  <script>
+    function showBank() {
+      document.getElementById('bankSection').style.display = 'block';
+      document.getElementById('walletSection').style.display = 'none';
+    }
+
+    function showWallet() {
+      document.getElementById('walletSection').style.display = 'block';
+      document.getElementById('bankSection').style.display = 'none';
+    }
+
+    function transferMoney() {
+      const sender = document.getElementById('senderName').value;
+      const receiver = document.getElementById('receiverName').value;
+      const amount = document.getElementById('amount').value;
+
+      if(sender === '' || receiver === '' || amount === '') {
+        alert('Please fill all required details');
+        return;
+      }
+
+      document.getElementById('successBox').style.display = 'block';
+
+      document.getElementById('details').innerHTML = `
+        Sender: ${sender}<br>
+        Receiver: ${receiver}<br>
+        Amount: $${amount} USD
+      `;
+
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  </script>
+
+</body>
+          </html>
